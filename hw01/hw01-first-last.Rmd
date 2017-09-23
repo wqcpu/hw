@@ -4,12 +4,15 @@ output: github_document
 ---
 # load data file
 ```{r}
+library(scatterplot3d)
 load("./nba2017-salary-points.RData")
 ls()
 ```
 ## A bit of data preprocessing
 ```{r}
 salary_million<-round(salary/1000000,2)
+experience[(experience=="R")]<-0
+experience<-as.integer(experience)
 position <- factor(position, levels=c('C','SF','PF','SG','PG'), labels=c( 'center','small_fwd','power_fwd','shoot_guard','point_guard'))
 table(position)
 ```
@@ -93,11 +96,12 @@ cat(sep="", "R2=",R2,"\n")
 ```
 ##Exploring Position and Experience
 ```{r}
-
+plot(experience,salary_million,xlab = 'Years of Experience',ylab = 'Salary(in millions)',main = "Scatterplot with lowess smooth",cex=1,pch=19)
+lines(lowess(experience,salary_million), col ='red',lwd=3)
 ```
 
 ```{r}
-
+scatterplot3d(x=points,y=experience,z=salary_million,,pch = 19,color ='coral',main='3D Scatterplot')
 ```
 
 ```{r}
@@ -105,4 +109,8 @@ plotdata<-data.frame(salary_million,position)
 boxplot(salary_million~position,data=plotdata,xlab = 'Position',ylab ='Salary(in millions)')
 ```
 
-Position does not seem to be related with Salary
+The scatterplot of Years-of-Experience and Salary including a lowess smooth line means that Experience does not seem to be related with Salary.
+
+The 3D Scatterplot means that points is more influential than experience is on salary.
+
+Position does not seem to be related with Salary.

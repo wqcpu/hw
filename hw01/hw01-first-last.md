@@ -5,18 +5,26 @@ load data file
 ==============
 
 ``` r
+library(scatterplot3d)
+```
+
+    ## Warning: package 'scatterplot3d' was built under R version 3.4.1
+
+``` r
 load("./nba2017-salary-points.RData")
 ls()
 ```
 
-    ## [1] "player"   "points"   "points1"  "points2"  "points3"  "position"
-    ## [7] "salary"   "team"
+    ## [1] "experience" "player"     "points"     "points1"    "points2"   
+    ## [6] "points3"    "position"   "salary"     "team"
 
 A bit of data preprocessing
 ---------------------------
 
 ``` r
 salary_million<-round(salary/1000000,2)
+experience[(experience=="R")]<-0
+experience<-as.integer(experience)
 position <- factor(position, levels=c('C','SF','PF','SG','PG'), labels=c( 'center','small_fwd','power_fwd','shoot_guard','point_guard'))
 table(position)
 ```
@@ -181,7 +189,10 @@ text(2400, 30,'lowess',col = 'red')
 text(2400, 20,'regression',col = 'blue')
 ```
 
-![](hw01-first-last_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-8-1.png) \#\#Regression residuals and Coefficient of Determination R^2
+![](hw01-first-last_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-8-1.png)
+
+Regression residuals and Coefficient of Determination R2
+--------------------------------------------------------
 
 ``` r
 residuals<-salary_million-predict_salary
@@ -216,10 +227,25 @@ Exploring Position and Experience
 ---------------------------------
 
 ``` r
+plot(experience,salary_million,xlab = 'Years of Experience',ylab = 'Salary(in millions)',main = "Scatterplot with lowess smooth",cex=1,pch=19)
+lines(lowess(experience,salary_million), col ='red',lwd=3)
+```
+
+![](hw01-first-last_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-11-1.png)
+
+``` r
+scatterplot3d(x=points,y=experience,z=salary_million,,pch = 19,color ='coral',main='3D Scatterplot')
+```
+
+![](hw01-first-last_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-1.png)
+
+``` r
 plotdata<-data.frame(salary_million,position)
 boxplot(salary_million~position,data=plotdata,xlab = 'Position',ylab ='Salary(in millions)')
 ```
 
 ![](hw01-first-last_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-13-1.png)
 
-Position does not seem to be related with Salary
+Experience does not seem to be related with Salary.
+
+Position does not seem to be related with Salary.
